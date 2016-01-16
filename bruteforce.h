@@ -8,7 +8,7 @@
 #include "ast.h"
 #include "state.h"
 
-#define C_REG 1
+#define C_REG 0
 
 class bruteforce
 {
@@ -21,7 +21,7 @@ public:
     vec3 get_pos(char* word);
 
 private:
-#ifdef C_REG
+#if C_REG
     regex_t rx;
 #else
     std::regex rx;

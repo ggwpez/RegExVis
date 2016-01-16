@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     bruteforce br;
 
     qDebug() << "propagating...";
-    state start = br.propagate("0+", "012", 4);        //be carefull with values > 4
+    state start = br.propagate("(0|1|2)+", "012", 4);        //be carefull with values > 4
     qDebug() << "done";
     std::vector<point3f> lines = std::vector<point3f>();
     qDebug() << "calculating lines...";

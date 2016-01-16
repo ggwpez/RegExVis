@@ -10,6 +10,8 @@ struct point3f
 
     point3f(float X, float Y, float Z, unsigned char R, unsigned char G, unsigned char B, unsigned char A);
     point3f(vec3 pos, unsigned char R, unsigned char G, unsigned char B, unsigned char A);
+    bool operator==(const point3f& b);
+    bool operator!=(const point3f& b);
 
     set_clr(unsigned char R, unsigned char G, unsigned char B, unsigned char A);
 };

@@ -10,7 +10,7 @@ state bruteforce::propagate(char* regex, char* base, size_t c)
 {
     state start = state(vec3(), std::vector<state>());
 
-#ifdef C_REG
+#if C_REG
     if (regcomp(&rx, regex, REG_EXTENDED))
     {
         throw "RegExp invalid!";
@@ -39,16 +39,17 @@ void bruteforce::propagate(char* word, state* start, char* base, size_t c)
     size_t wdl = strlen(word), bsl = strlen(base);
     char buffer[wdl +c +1] = { 0 };
     strcpy(buffer, word);
-    uint64_t wc = pow(c, bsl +1) -1;                               //how many new combinations are there? (word count)
+    uint64_t wc = pow(c, bsl +1) -1;                                //how many new combinations are there? (word count)
 
+    for (uint64_t s = 0; s < c; s++)                                //word length
     for (uint64_t i = 0; i < wc; i++)
     {
         memset(buffer +wdl, 0, c +1);
-        combine(i, base, buffer +wdl, c);
+        combine(i, base, buffer +wdl, s);
 
         if (
-#ifdef C_REG
-        !regexec(&rx, buffer, 0, NULL, 0)
+#if C_REG
+        regexec(&rx, buffer, 0, NULL, 0)
 #else
         std::regex_match(buffer, rx)
 #endif

@@ -1,9 +1,6 @@
 #include "interpreter.h"
 
 #include <stdint.h>
-//#define ADD_DIST(v, e) if(std::find(v.begin(), v.end(), e) == v.end()) \
-  //  v.push_back(e);
-#define ADD_DIST(v, e) v.push_back(e);
 
 interpreter::interpreter()
 {
