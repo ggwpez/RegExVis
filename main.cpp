@@ -5,18 +5,19 @@
 #include "parser.h"
 #include "interpreter.h"
 #include "state.h"
+#include "bruteforce.h"
 
 #define DELOTE_SYSTEM32 delete
 
 int main(int argc, char** argv)
 {
     QApplication a(argc, argv);
-    Lines w;
+    //Lines w;
 
     parser par = parser();
     size_t l = 0;
     /*(0+)|(1+)|(2+), (0+)(1+)(2+), (0|1|2)+*/
-    ast* tree = par.parse("(0+)|(1+)|(2+)", l);
+    /*ast* tree = par.parse("(0+)|(1+)|(2+)", l);
 
     if (!tree) qDebug("Parsing string empty?");
     tree->write(qDebug().nospace());
@@ -27,9 +28,12 @@ int main(int argc, char** argv)
     end_state.calc_lines(&lines);
 
     w.set_data(&lines);
-    w.showFullScreen();
+    w.showFullScreen();*/
 
+    bruteforce br = bruteforce("0+");
+    state start = state(vec3(), std::vector<state>());
 
+    br.propagate("", &start, 3);
     //tree->free();
     return a.exec();
 };

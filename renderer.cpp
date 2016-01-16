@@ -1,5 +1,4 @@
 #include "renderer.h"
-#include "teapot.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -63,6 +62,8 @@ void Lines::set_data(std::vector<point3f>* Lines)
 
 void Lines::initializeGL()
 {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 };
 
 void Lines::resizeGL( int w, int h )
@@ -99,24 +100,17 @@ void Lines::paintGL()
     glScalef(scale, scale, scale);
 
     //draw points
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
+
     glVertexPointer(3, GL_FLOAT, sizeof(point3f), &points[0].x);
     glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(point3f), &points[0].r);
     glPointSize(DOT_SIZE);
     glDrawArrays(GL_POINTS, 0, bb.x*bb.y*bb.z);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
 
     //draw lines
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(point3f), &lines[0].x);
     glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(point3f), &lines[0].r);
     glLineWidth(LINE_SIZE);
     glDrawArrays(GL_LINES, 0, lines_c);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
 
     glPopMatrix();
 };

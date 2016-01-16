@@ -28,7 +28,6 @@ HEADERS += \
 	interpreter.h \
 	vec3.h \
 	state.h \
-	teapot.h \
 	point3f.h \
     bruteforce.h
 

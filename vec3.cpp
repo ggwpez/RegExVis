@@ -2,7 +2,7 @@
 
 vec3::vec3()
 {
-    x = y = z = -1;
+    x = y = z = 0;
 };
 
 vec3::vec3(u_int32_t X, u_int32_t Y, u_int32_t Z)
