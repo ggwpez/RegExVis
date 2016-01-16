@@ -12,23 +12,25 @@ bruteforce::bruteforce(char* regex)
 //### optimize
 state* bruteforce::propagate(char* word, state* start, size_t c)
 {
+    if (!c) return start;
+
     char* base = "012";
-    size_t bsl = strlen(base), wdl = strlen(word);
-    size_t bfl = (log(c) / log(bsl)) +wdl +1;           //get length of the number in the desired base plus the prefix length
-    char buffer[bfl];
-
-    //int wc = pow(bsl, c);                                //how many words could be in the language?
-
+    size_t wdl = strlen(word), bsl = strlen(base);
+    char buffer[wdl +c +1] = { 0 };
     strcpy(buffer, word);
-    for (int i = 0; i < bsl; i++)                       //combine the actual state with all possible new ways
-    {
-        memset(buffer +wdl, 0, bfl -wdl);               //MARK IT ZERO
-        buffer[wdl] = base[i];
+    int wc = pow(c, bsl +1) -1;                               //how many new combinations are there? (word count)
 
-        if (std::regex_match(buffer, rx))               //new combination get?
+    for (int i = 0; i < wc; i++)
+    {
+        memset(buffer +wdl, 0, c +1);
+        combine(i, base, buffer +wdl, c);
+
+        if (std::regex_match(buffer, rx))
         {
-            start->child.push_back(state(get_pos(buffer), std::vector<state>()));
-            propagate(buffer, start, c-1);
+            state ns = state(get_pos(buffer), std::vector<state>());
+            propagate(buffer, &ns, c-1);
+
+            start->child.push_back(ns);
         }
     }
 
@@ -46,15 +48,14 @@ vec3 bruteforce::get_pos(char* word)
     return ret;
 };
 
-void bruteforce::combine(int i, char* base, char* buffer)
+void bruteforce::combine(int i, char* base, char* buffer, size_t l)
 {
     size_t base_l = strlen(base);
     if (!base_l) return;
 
     int o = 0;
 
-    buffer[0] = '0';
-    while (i)
+    while (o < l)
     {
         buffer[o++] = base[i % base_l];
         i /= base_l;

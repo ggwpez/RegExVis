@@ -12,28 +12,37 @@
 int main(int argc, char** argv)
 {
     QApplication a(argc, argv);
-    //Lines w;
+    Lines w;
 
-    parser par = parser();
+    bruteforce br = bruteforce("01[012]+");
+    state start = state(vec3(), std::vector<state>());
+
+    qDebug() << "propagating...";
+    br.propagate("", &start, 4);
+    qDebug() << "done";
+    std::vector<point3f> lines = std::vector<point3f>();
+    qDebug() << "calculating lines...";
+    start.calc_lines(&lines);
+    qDebug() << "done";
+
+    w.set_data(&lines);
+    w.showFullScreen();
+
+    /*parser par = parser();
     size_t l = 0;
-    /*(0+)|(1+)|(2+), (0+)(1+)(2+), (0|1|2)+*/
-    /*ast* tree = par.parse("(0+)|(1+)|(2+)", l);
+    /*(0+)|(1+)|(2+), (0+)(1+)(2+), (0|1|2)+
+    ast* tree = par.parse("(0+)(1+)(2+)", l);
 
     if (!tree) qDebug("Parsing string empty?");
     tree->write(qDebug().nospace());
 
     interpreter inter = interpreter();
-    state end_state = inter.propagate(tree, 4);
+    state end_state = inter.propagate(tree, 3);
     std::vector<point3f> lines = std::vector<point3f>();
     end_state.calc_lines(&lines);
 
     w.set_data(&lines);
     w.showFullScreen();*/
 
-    bruteforce br = bruteforce("0+");
-    state start = state(vec3(), std::vector<state>());
-
-    br.propagate("", &start, 3);
-    //tree->free();
     return a.exec();
 };

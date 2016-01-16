@@ -31,4 +31,4 @@ HEADERS += \
 	point3f.h \
     bruteforce.h
 
-QMAKE_CXXFLAGS += -std=c++14 -fpermissive -O0 -Wcomment
+QMAKE_CXXFLAGS += -std=c++14 -fpermissive -O2 -Wcomment

@@ -29,7 +29,7 @@ Lines::~Lines()
 
 void Lines::set_data(std::vector<point3f>* Lines)
 {
-    bb = vec3(1, 1, 1);
+    bb = vec3(0, 0, 0);
 
     if (points)
     {
@@ -46,8 +46,9 @@ void Lines::set_data(std::vector<point3f>* Lines)
         lines[i].set_clr(CLR_LINE);
     }
 
-    dim = vec3(bb.x == 1 ? 0 : 1, bb.y == 1 ? 0 : 1, bb.z == 1 ? 0 : 1);
-    bb = bb +dim;
+    dim = vec3(bb.x ? 1 : 0, bb.y ? 1 : 0, bb.z ? 1 : 0);
+    bb = bb +(dim = MAX_VEC3(dim, vec3(1,1,1)));
+
     int i = 0;
     points = (point3f*)calloc(bb.x*bb.y*bb.z, sizeof(point3f));
 
@@ -93,7 +94,7 @@ void Lines::paintGL()
     glClearColor(CLR_BLK);
     glPushMatrix();
 
-    gluLookAt(1, 1, 1, 10,10,10, 0,1,0);
+    gluLookAt(-2, -2, -2, 0,0,0, 0,1,0);
     glRotatef( m_theta, 1.0f, 0.0f, 0.0f);
     glRotatef( m_phi,   0.0f, 1.0f, 0.0f);
     glRotatef( m_rho,   0.0f, 0.0f, 1.0f);

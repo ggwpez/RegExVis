@@ -12,8 +12,8 @@ class bruteforce
 public:
     bruteforce(char *regex);
 
-    state* propagate(char *word, state* start, size_t c);
-    void combine(int i, char *base, char *buffer);
+    state *propagate(char *word, state* start, size_t c);
+    void combine(int i, char *base, char *buffer, size_t l);
     vec3 get_pos(char* word);
 
 private:
