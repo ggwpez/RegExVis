@@ -4,37 +4,65 @@
 
 #include "bruteforce.h"
 
-bruteforce::bruteforce(char* regex)
+bruteforce::bruteforce() { wac = 0; };
+
+state bruteforce::propagate(char* regex, char* base, size_t c)
 {
+    state start = state(vec3(), std::vector<state>());
+
+#ifdef C_REG
+    if (regcomp(&rx, regex, REG_EXTENDED))
+    {
+        throw "RegExp invalid!";
+        return start;
+    }
+#else
     rx = std::regex(regex);
-};
+#endif
+
+    size_t bsl = strlen(base);
+    uint64_t wc = pow(c, bsl +1) -1;
+
+    qDebug() << "got:" << wc << "words to analyse" << (wc > 100000 ? "- Im choking on it!" : "");
+    propagate("", &start, "012", c);
+
+    qDebug() << "got:" << wac << "words to analyse" << (wc > 100000 ? "- Im choking on it!" : "");
+
+    return start;
+}
 
 //### optimize
-state* bruteforce::propagate(char* word, state* start, size_t c)
+void bruteforce::propagate(char* word, state* start, char* base, size_t c)
 {
-    if (!c) return start;
+    if (c < 2) return;
 
-    char* base = "012";
     size_t wdl = strlen(word), bsl = strlen(base);
     char buffer[wdl +c +1] = { 0 };
     strcpy(buffer, word);
-    int wc = pow(c, bsl +1) -1;                               //how many new combinations are there? (word count)
+    uint64_t wc = pow(c, bsl +1) -1;                               //how many new combinations are there? (word count)
 
-    for (int i = 0; i < wc; i++)
+    for (uint64_t i = 0; i < wc; i++)
     {
         memset(buffer +wdl, 0, c +1);
         combine(i, base, buffer +wdl, c);
 
-        if (std::regex_match(buffer, rx))
+        if (
+#ifdef C_REG
+        !regexec(&rx, buffer, 0, NULL, 0)
+#else
+        std::regex_match(buffer, rx)
+#endif
+                )
         {
             state ns = state(get_pos(buffer), std::vector<state>());
-            propagate(buffer, &ns, c-1);
+
+            propagate(buffer, &ns, base, c-1);
 
             start->child.push_back(ns);
         }
     }
 
-    return start;
+    wac += wc;
 };
 
 vec3 bruteforce::get_pos(char* word)
@@ -48,12 +76,12 @@ vec3 bruteforce::get_pos(char* word)
     return ret;
 };
 
-void bruteforce::combine(int i, char* base, char* buffer, size_t l)
+void bruteforce::combine(uint64_t i, char* base, char* buffer, size_t l)
 {
     size_t base_l = strlen(base);
     if (!base_l) return;
 
-    int o = 0;
+    uint64_t o = 0;
 
     while (o < l)
     {

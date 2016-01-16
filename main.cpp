@@ -14,11 +14,10 @@ int main(int argc, char** argv)
     QApplication a(argc, argv);
     Lines w;
 
-    bruteforce br = bruteforce("01[012]+");
-    state start = state(vec3(), std::vector<state>());
+    bruteforce br;
 
     qDebug() << "propagating...";
-    br.propagate("", &start, 4);
+    state start = br.propagate("0+", "012", 4);        //be carefull with values > 4
     qDebug() << "done";
     std::vector<point3f> lines = std::vector<point3f>();
     qDebug() << "calculating lines...";
