@@ -70,8 +70,7 @@ state* interpreter::propagate_state(ast* tree, state* start, size_t cycles)
         state ns = state(start->pos, std::vector<state>());
         propagate(tree->v1, &ns, cycles);
 
-        ns.attack_children_vectors(start);
-
+        ns.attach_children_vectors(start);
         return start;
     }
     else if (tree->id == astid::op_star)

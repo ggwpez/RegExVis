@@ -57,7 +57,17 @@ void Lines::set_data(std::vector<point3f>* Lines)
             for (int z = 0; z < bb.z; z++)
                 points[i++] = point3f(x,y,z, CLR_DOT);
 
-    qDebug() << "Lines:" << lines_c << "\nBB:" << bb.x << bb.y << bb.z;
+    for (size_t i = 0; i < lines_c; i++)
+    {
+        int zDirection =  % bb.z;
+        int yDirection = (i / bb.z) % bb.y;
+        int xDirection = i / (bb.y * bb.z);
+
+
+
+    }
+
+    qDebug().nospace() << "Lines: " << lines_c << "\nCollider: " << bb.x << '/' << bb.y << '/' << bb.z;
     qDebug().nospace() << "Dim: " << dim.x << '/' << dim.y << '/' << dim.z << " as " << dim.x+dim.y+dim.z << 'd';
 };
 

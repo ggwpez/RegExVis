@@ -26,7 +26,6 @@ private:
 #else
     std::regex rx;
 #endif
-    uint64_t wac;       //words analysed count, for debug purposes only
 };
 
 #endif // BRUTEFORCE_H

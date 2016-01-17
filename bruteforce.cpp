@@ -4,7 +4,7 @@
 
 #include "bruteforce.h"
 
-bruteforce::bruteforce() { wac = 0; };
+bruteforce::bruteforce() { };
 
 state bruteforce::propagate(char* regex, char* base, size_t c)
 {
@@ -21,12 +21,10 @@ state bruteforce::propagate(char* regex, char* base, size_t c)
 #endif
 
     size_t bsl = strlen(base);
-    uint64_t wc = pow(c, bsl +1) -1;
+    uint64_t wc = pow(bsl, c) /2;
+    qDebug() << "analysed: " << wc << "words" << (wc > 2000000 ? "- Im choking on it!" : "");
 
-    qDebug() << "got:" << wc << "words to analyse" << (wc > 100000 ? "- Im choking on it!" : "");
     propagate("", &start, "012", c);
-
-    qDebug() << "got:" << wac << "words to analyse" << (wc > 100000 ? "- Im choking on it!" : "");
 
     return start;
 }
@@ -34,12 +32,12 @@ state bruteforce::propagate(char* regex, char* base, size_t c)
 //### optimize
 void bruteforce::propagate(char* word, state* start, char* base, size_t c)
 {
-    if (c < 2) return;
+    if (c < 1) return;
 
     size_t wdl = strlen(word), bsl = strlen(base);
-    char buffer[wdl +c +1] = { 0 };
+    char buffer[wdl +2] = { 0 };
     strcpy(buffer, word);
-    uint64_t wc = pow(c, bsl +1) -1;                                //how many new combinations are there? (word count)
+    /*uint64_t wc = pow(c, bsl +1) -1;                              //how many new combinations are there? (word count)
 
     for (uint64_t s = 0; s < c; s++)                                //word length
     for (uint64_t i = 0; i < wc; i++)
@@ -47,13 +45,7 @@ void bruteforce::propagate(char* word, state* start, char* base, size_t c)
         memset(buffer +wdl, 0, c +1);
         combine(i, base, buffer +wdl, s);
 
-        if (
-#if C_REG
-        regexec(&rx, buffer, 0, NULL, 0)
-#else
-        std::regex_match(buffer, rx)
-#endif
-                )
+        if (std::regex_match(buffer, rx))
         {
             state ns = state(get_pos(buffer), std::vector<state>());
 
@@ -61,14 +53,36 @@ void bruteforce::propagate(char* word, state* start, char* base, size_t c)
 
             start->child.push_back(ns);
         }
-    }
+    }*/
 
-    wac += wc;
+    for (size_t i = 0; i < bsl; i++)
+    {
+        buffer[wdl] = base[i];
+        //qDebug() << "from:" << word << "to:" << buffer;
+
+        if (std::regex_match(buffer, rx))
+        {
+            state ns = state(get_pos(buffer), std::vector<state>());
+
+            propagate(buffer, &ns, base, c -1);
+
+            start->child.push_back(ns);
+        }
+        else
+        {
+            state ns = state(get_pos(buffer), std::vector<state>());
+
+            propagate(buffer, start, base, c -1);
+
+            //start->child.push_back(ns);
+            ns.attach_children_vectors(start);
+        }
+    }
 };
 
 vec3 bruteforce::get_pos(char* word)
 {
-    vec3 ret;                                            //def to zero
+    vec3 ret;                                                   //def to zero
     size_t l = strlen(word);
 
     for (size_t i = 0; i < l; i++)

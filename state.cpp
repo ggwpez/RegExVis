@@ -11,20 +11,26 @@ state::state(vec3 Pos, std::vector<state> Child)
     child = Child;
 };
 
-
-void state::attack_children_vectors(state* v)
+u_int64_t state::size()
 {
+    u_int64_t ret = 1;
+
+    for (state s : this->child)
+        ret += s.size();
+
+    return ret;
+}
+
+void state::attach_children_vectors(state* v)
+{
+    //if (this->ZZ)
     for (state c : this->child)
     {
         v->child.push_back(state(c.pos, std::vector<state>()));
 
-        c.attack_children_vectors(v);
+        c.attach_children_vectors(v);
     }
 };
-
-//#define ADD_DIST(v, e) if(std::find(v->begin(), v->end(), e) == v->end()) \
-  //  v->push_back(e);
-//#define ADD_DIST(v, e) v->push_back(e);
 
 std::vector<point3f>* state::calc_lines(std::vector<point3f>* v)
 {
@@ -33,13 +39,13 @@ std::vector<point3f>* state::calc_lines(std::vector<point3f>* v)
         point3f p1 = point3f(this->pos, 0,0,0,0);
         point3f p2 = point3f(c.pos, 0,0,0,0);
 
-        auto it = std::find(v->begin(), v->end(), p1);
-        if (it != v->end() &&
-            it. != p2)
-        {
+        /*std::vector<point3f>::iterator it = std::find(v->begin(), v->end(), p1);
+        if (p1 != p2 && (it == v->end() || ((it - v->begin()) & 1) ||
+            *(++it) != p2))
+        {*/
             v->push_back(p1);
             v->push_back(p2);
-        }
+        //}
 
         c.calc_lines(v);
     }

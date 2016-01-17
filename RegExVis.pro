@@ -19,7 +19,7 @@ SOURCES += main.cpp \
 	vec3.cpp \
 	state.cpp \
 	point3f.cpp \
-    bruteforce.cpp
+	bruteforce.cpp
 
 HEADERS += \
 	renderer.h \
@@ -29,6 +29,6 @@ HEADERS += \
 	vec3.h \
 	state.h \
 	point3f.h \
-    bruteforce.h
+	bruteforce.h
 
-QMAKE_CXXFLAGS += -std=c++14 -fpermissive -O2 -Wcomment
+QMAKE_CXXFLAGS += -std=c++14 -fpermissive -O0 -Wcomment -pipe
