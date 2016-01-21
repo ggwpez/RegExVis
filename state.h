@@ -8,7 +8,7 @@
 class state
 {
 public:
-    state();
+    state() = delete;
     state(vec3 Pos, std::vector<state> Child);
     std::vector<point3f>* calc_lines(point3f start, std::vector<point3f> *v);
 

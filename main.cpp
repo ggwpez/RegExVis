@@ -15,14 +15,14 @@ int main(int argc, char** argv)
     Lines w;
 
     bruteforce br;
+    char*   l = "012(0|1|2)*";
 
-    qDebug() << "propagating...";
-    state start = br.propagate("012(0|1|2)+", "012", 6);
-    qDebug() << "done NFA got:" << start.size() << "states";
+    qDebug() << "propagating:" << l;
+    state start = br.propagate(l, "012", 4);
+    qDebug() << "Tree got:" << start.size() << "nodes";
     std::vector<point3f> lines = std::vector<point3f>();
     qDebug() << "calculating lines...";
     start.calc_lines(point3f(), &lines);
-    qDebug() << "done";
 
     w.set_data(&lines);
     w.showFullScreen();

@@ -1,9 +1,6 @@
 #include "state.h"
 
-state::state()
-{
-    throw "Pls no def c_tor!";
-};
+#define DEEP_DRAW 1
 
 state::state(vec3 Pos, std::vector<state> Child)
 {
@@ -23,7 +20,6 @@ u_int64_t state::size()
 
 void state::attach_children_vectors(state* v)
 {
-    //if (this->ZZ)
     for (state c : this->child)
     {
         v->child.push_back(state(c.pos, std::vector<state>()));
@@ -32,7 +28,6 @@ void state::attach_children_vectors(state* v)
     }
 };
 
-#define DEEP_DRAW 0
 std::vector<point3f>* state::calc_lines(point3f start, std::vector<point3f>* v)
 {
     for (state c : this->child)

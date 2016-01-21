@@ -6,7 +6,7 @@
 
 bruteforce::bruteforce() { };
 
-state bruteforce::propagate(char* regex, char* base, size_t c)
+state bruteforce::propagate(char* regex, char* sigma, size_t c)
 {
     state start = state(vec3(), std::vector<state>());
 
@@ -20,47 +20,48 @@ state bruteforce::propagate(char* regex, char* base, size_t c)
     rx = std::regex(regex);
 #endif
 
-    size_t bsl = strlen(base);
-    uint64_t wc = pow(bsl, c) /2;
-    qDebug() << "analysed: " << wc << "words" << (wc > 2000000 ? "- Im choking on it!" : "");
+    size_t bsl = strlen(sigma);
+   // uint64_t wc = pow(bsl, c) /2;                       // (|Σ| ^l) /2
+    uint64_t in_l = propagate("", &start, "012", c);
 
-    propagate("", &start, "012", c);
+    qDebug().nospace() << wc << '/' << in_l << " analyzed w/w in l (" << (!in_l ? 0 : (in_l *100.f) /wc) << ")% "
+                       << (wc > 2000000 ? "- Im choking on it!" : "");
 
     return start;
 }
 
 //### optimize
-void bruteforce::propagate(char* word, state* start, char* base, size_t c)
+u_int64_t bruteforce::propagate(char* word, state* start, char* sigma, size_t c)
 {
-    if (c < 1) return;
+    if (c < 1) return 0;
 
-    size_t wdl = strlen(word), bsl = strlen(base);
+    u_int64_t ret = 0;
+    size_t wdl = strlen(word), bsl = strlen(sigma);
     char buffer[wdl +2] = { 0 };
+    char* b_tmp = buffer;
     strcpy(buffer, word);
-
+wc++;
     for (size_t i = 0; i < bsl; i++)
     {
-        buffer[wdl] = base[i];
-        //qDebug() << "from:" << word << "to:" << buffer;
+        buffer[wdl] = sigma[i];
 
         if (std::regex_match(buffer, rx))
         {
             state ns = state(get_pos(buffer), std::vector<state>());
 
-            propagate(buffer, &ns, base, c -1);
-
+            ret += propagate(buffer, &ns, sigma, c -1) +1;
             start->child.push_back(ns);
         }
         else
         {
-            state ns = state(get_pos(buffer), std::vector<state>());
+            //state ns = state(get_pos(buffer), std::vector<state>());
 
-            propagate(buffer, start, base, c -1);
-
-            //start->child.push_back(ns);
-            ns.attach_children_vectors(start);
+            ret += propagate(buffer, start, sigma, c -1);
+            //ns.attach_children_vectors(start);
         }
     }
+
+    return ret;
 };
 
 vec3 bruteforce::get_pos(char* word)
@@ -74,16 +75,16 @@ vec3 bruteforce::get_pos(char* word)
     return ret;
 };
 
-void bruteforce::combine(uint64_t i, char* base, char* buffer, size_t l)
+void bruteforce::combine(uint64_t i, char* sigma, char* buffer, size_t l)
 {
-    size_t base_l = strlen(base);
+    size_t base_l = strlen(sigma);
     if (!base_l) return;
 
     uint64_t o = 0;
 
     while (o < l)
     {
-        buffer[o++] = base[i % base_l];
+        buffer[o++] = sigma[i % base_l];
         i /= base_l;
     }
 };
