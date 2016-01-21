@@ -1,6 +1,14 @@
 #include "point3f.h"
 
-point3f::point3f(float X, float Y, float Z, unsigned char R, unsigned char G, unsigned char B, unsigned char A)
+point3f::point3f()
+    : point3f(0,0,0,0,0,0,0)
+{ };
+
+point3f::point3f(vec3 pos)
+    : point3f(pos, 0, 0, 0, 0)
+{ };
+
+point3f::point3f(GLint X, GLint Y, GLint Z, unsigned char R, unsigned char G, unsigned char B, unsigned char A)
 {
     x = X;
     y = Y;

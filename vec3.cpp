@@ -5,13 +5,17 @@ vec3::vec3()
     x = y = z = 0;
 };
 
-vec3::vec3(u_int32_t X, u_int32_t Y, u_int32_t Z)
+vec3::vec3(GLint X, GLint Y, GLint Z)
 {
     x = X;
     y = Y;
     z = Z;
 };
 
+GLint vec3::sq_length()
+{
+    return this->x * this->x + this->y * this->y + this->z * this->z;
+};
 
 bool vec3::operator==(const vec3& b)
 {

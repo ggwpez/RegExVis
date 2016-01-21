@@ -32,22 +32,24 @@ void state::attach_children_vectors(state* v)
     }
 };
 
-std::vector<point3f>* state::calc_lines(std::vector<point3f>* v)
+#define DEEP_DRAW 0
+std::vector<point3f>* state::calc_lines(point3f start, std::vector<point3f>* v)
 {
     for (state c : this->child)
     {
-        point3f p1 = point3f(this->pos, 0,0,0,0);
+        point3f p1;
         point3f p2 = point3f(c.pos, 0,0,0,0);
 
-        /*std::vector<point3f>::iterator it = std::find(v->begin(), v->end(), p1);
-        if (p1 != p2 && (it == v->end() || ((it - v->begin()) & 1) ||
-            *(++it) != p2))
-        {*/
-            v->push_back(p1);
-            v->push_back(p2);
-        //}
+#if !DEEP_DRAW
+        p1 = point3f(this->pos);
+#else
+        p1 = start;
+#endif
 
-        c.calc_lines(v);
+        v->push_back(p1);
+        v->push_back(p2);
+
+        c.calc_lines(point3f(this->pos), v);
     }
 
     return v;

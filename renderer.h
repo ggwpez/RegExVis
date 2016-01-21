@@ -7,12 +7,13 @@
 #include "vec3.h"
 #include "point3f.h"
 
-#define DOT_SIZE 2.f
+#define DOT_SIZE 10.f
 #define LINE_SIZE 1.f
 
-#define CLR_BLK .2f, .2f, .2f, .1f
-#define CLR_DOT   127,255,0,0
-#define CLR_LINE  0, 0, 0, 0
+#define CLR_BLK .2f, .2f, .2f, 1.f
+#define CLR_DOT 127,255,0, 127
+#define CLR_IN_DOT 255,0,0, 255
+#define CLR_LINE 255, 255, 255, 255
 
 const float pi = 3.141592653f;
 const float twoPi = 2.0f * pi;
